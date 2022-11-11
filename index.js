@@ -45,7 +45,7 @@ app.post("/register", async function(req, res){
     else{
         let hashPassword = await bcrypt.hash(password, 10);
         var newuser = {
-            username: username, password: hashPassword
+            username: username, password: hashPassword, money: 100
         }
         users.push(newuser);
         console.log(users);
@@ -61,6 +61,7 @@ app.post("/login", async function(req, res){
         
         if(await bcrypt.compare(password, founduser.password)){
             req.session.user = {username: username}
+            req.session.user = {money: founduser.money}
             res.redirect("home");
         }
         else{
@@ -75,7 +76,7 @@ app.post("/login", async function(req, res){
 
 app.get("/home", function(req, res){    
     if (req.session.user){
-        return res.render("home", {username: req.session.user.username});
+        return res.render("home", {username: req.session.user.username, money: req.session.user.money});
     }
     else{
         res.redirect("/login");
