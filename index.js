@@ -11,6 +11,13 @@ app.use(express.static(__dirname + "/public"));
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "hbs");
 
+app.use(session({
+    secret: "secretKey",
+    saveUninitialized: true,
+    cookie: { maxAge: 1000 * 60 * 60 * 24 },
+    resave: false
+}));
+
 var users = [];
 
 app.get("/", function(req, res){
@@ -49,10 +56,12 @@ app.post("/register", async function(req, res){
 app.post("/login", async function(req, res){
     var username = req.body.username
     var password = req.body.password;
-    if(users.find((data) => username === data.username)){
+    var founduser = users.find((data) => username === data.username)
+    if(founduser){
         
-        if(await bcrypt.compare(password, data.password)){
-            // to do login
+        if(await bcrypt.compare(password, founduser.password)){
+            req.session.user = {username: username}
+            res.redirect("home");
         }
         else{
             res.redirect("/")
@@ -62,4 +71,19 @@ app.post("/login", async function(req, res){
     else{
         res.redirect("/");
     }
+})
+
+app.get("/home", function(req, res){    
+    if (req.session.user){
+        return res.render("home", {username: req.session.user.username});
+    }
+    else{
+        res.redirect("/login");
+    }
+})
+
+app.get("/logout", function(req, res){
+    req.session.destroy();
+    res.redirect("/");
+    
 })
