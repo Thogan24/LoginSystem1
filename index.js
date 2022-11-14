@@ -81,6 +81,14 @@ app.get("/home", function(req, res){
     else{
         res.redirect("/login");
     }
+    //const button = document.getElementById('btn');
+
+    //button.addEventListener('click', function addMoney(){
+    //    console.log('element clicked!!!!!');
+    //});
+    function myFunction(){
+        console.log('a');
+    }
 })
 
 app.get("/logout", function(req, res){
