@@ -60,8 +60,7 @@ app.post("/login", async function(req, res){
     if(founduser){
         
         if(await bcrypt.compare(password, founduser.password)){
-            req.session.user = {username: username}
-            req.session.user = {money: founduser.money}
+            req.session.user = {username: username, money: founduser.money}
             res.redirect("home");
         }
         else{
@@ -86,9 +85,25 @@ app.get("/home", function(req, res){
     //button.addEventListener('click', function addMoney(){
     //    console.log('element clicked!!!!!');
     //});
-    function myFunction(){
-        console.log('a');
+    
+})
+
+app.get("/addmoney", function(req, res){    
+    if (req.session.user){
+        req.session.user.money += 100;
+        users.forEach(e => {            
+            if(e.username==req.session.user.username){
+                e.money+=100;
+            }
+        })
+        console.log(users);
+        return res.redirect("/home");        
     }
+    else{
+        res.redirect("/login");
+    }
+    
+    
 })
 
 app.get("/logout", function(req, res){
