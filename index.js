@@ -53,6 +53,18 @@ app.post("/register", async function(req, res){
     }
 })
 
+app.get("/index", function(req, res){
+    res.render("/index", {Userlist: 1});
+    var sortedUserList = [];
+    // USE SELECTION SORT OR INSERTION SORT TO SORT 
+    // users.forEach(e => {            
+    //     if(){
+            
+    //     }
+    // })
+
+})
+
 app.post("/login", async function(req, res){
     var username = req.body.username
     var password = req.body.password;
